@@ -7,7 +7,7 @@ public class Solver {
     boolean[][] individuals;
     double[] fits;
     Random rand;
-    int num_individuals;
+    int populationSize;
     
     ArrayList<double[]> grid;
 
@@ -17,9 +17,7 @@ public class Solver {
         grid = new ArrayList<double[]>();
         
         // set up any parameter here, e.g pop size, cross_rate etc.
-        num_individuals = 50;  // change this to anything you want
-        
-        
+        populationSize = 50;  // change this to anything you want
     }
     
     
@@ -58,10 +56,10 @@ public class Solver {
         //  the variable grid.size() denotes the 
   		// maximum number of turbines for the given scenario
   	
-        individuals = new boolean[num_individuals][grid.size()];
-        fits = new double[num_individuals];
+        individuals = new boolean[populationSize][grid.size()];
+        fits = new double[populationSize];
 
-        for (int p=0; p<num_individuals; p++) {
+        for (int p=0; p<populationSize; p++) {
             for (int i=0; i<grid.size(); i++) {
                 individuals[p][i] = rand.nextBoolean();
             }
@@ -74,13 +72,32 @@ public class Solver {
 
         /**** PUT YOUR OPTIMISER CODE HERE ***********/
         
-        for (int i=0; i<(10000); i++) {
+        for (int i=0; i<(1); i++) {
+        	// add some code to evolve a solution
 
-        	// add some code to evolve a solution        	
+            //selection
+            boolean[][] parents = null;
+            int[] parent = this.randomSelection();
+            for (int j=0; j<grid.size(); j++) {
+                parents[0][j] = individuals[parent[0]][j];
+                parents[1][j] = individuals[parent[1]][j];
+            }
+            System.out.println("made it");
+            for (int j=0; j<grid.size(); j++) {
+                System.out.print(parents[0][j]);
+            }
+            //crossover
+            //replacement
         }
       }
     
-    
+    private int[] randomSelection(){
+        int[] parents = null;
+        parents[0] = rand.nextInt(populationSize);
+        parents[1] = rand.nextInt(populationSize);
+        return parents;
+    }
+
     // evaluate a single chromosome
     private double evaluate_individual(boolean[] child) {
  
@@ -120,7 +137,7 @@ public class Solver {
     // evaluates the whole population
     private void evaluate() {
         double minfit = Double.MAX_VALUE;
-        for (int p=0; p<num_individuals; p++) {
+        for (int p=0; p<populationSize; p++) {
             int nturbines=0;
             for (int i=0; i<grid.size(); i++) {
                 if (individuals[p][i]) {
@@ -152,7 +169,7 @@ public class Solver {
             }
 	   
         }
-        System.out.println("min " + minfit);
+       // System.out.println("min " + minfit);
     }
 
     
