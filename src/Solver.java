@@ -69,8 +69,8 @@ public class Solver {
         evaluate();
 
         /**** PUT YOUR OPTIMISER CODE HERE ***********/
-
-        for (int i = 0; i < (10000); i++) {
+        int i = 0;
+        while(i<10000) {
             // add some code to evolve a solution
 
             //selection
@@ -83,8 +83,7 @@ public class Solver {
 
             //crossover
             boolean[][] children = new boolean[2][grid.size()];
-            children = this.onePoint(parents);
-            //children = this.randomUniform(parents);
+            children = this.randomUniform(parents);
 
             //replacement
             boolean[] child1 = new boolean[grid.size()];
@@ -112,26 +111,28 @@ public class Solver {
                 childFit = childFits[1];
             }
 
-            //replace worst
             if(this.falseCheck(child)) {
 
-                int worst = 0;
-
-                for(int j=0; j<grid.size();j++){
-                    if (fits[j] > fits[worst]) {
-                        worst = j;
+                if (fits[parent[0]] < fits[parent[1]]) {
+                    if(fits[parent[1]]>childFit) {
+                        for (int j = 0; j < grid.size(); j++) {
+                            population[parent[1]][j] = child[j];
+                            fits[parent[1]] = childFit;
+                        }
+                        System.out.println(i + " " + childFit);
+                    }
+                } else if (fits[parent[1]] < fits[parent[0]]) {
+                    if(fits[parent[0]]>childFit) {
+                        for (int j = 0; j < grid.size(); j++) {
+                            population[parent[0]][j] = child[j];
+                            fits[parent[0]] = childFit;
+                        }
+                        System.out.println(i + " " + childFit);
                     }
                 }
 
-                if(childFit<fits[worst]){
-                    for(int k =0; k<grid.size();k++){
-                        population[worst][k] = child[k];
-                    }
-
-                fits[worst] = childFit;
-
-                }
             }
+            i = wfle.getNumberOfEvaluation();
         }
         evaluate();
     }
@@ -186,24 +187,6 @@ public class Solver {
         return children;
     }
 
-    private boolean[][] onePoint(boolean[][] parents) {
-        boolean[][] children = new boolean[2][grid.size()];
-
-        int randomSplit = 2 + rand.nextInt((grid.size()-1) - 2 + 1);
-
-        for (int i = 0; i < grid.size(); i++) {
-         if(i<randomSplit){
-             children[0][i] = parents[1][i];
-             children[1][i] = parents[0][i];
-         }else if(i>randomSplit){
-             children[0][i] = parents[0][i];
-             children[1][i] = parents[1][i];
-         }
-        }
-
-        return children;
-    }
-
     // evaluate a single chromosome
     private double evaluate_individual(boolean[] child) {
 
@@ -227,13 +210,13 @@ public class Solver {
         }
 
         double coe;
-        //if (wfle.checkConstraint(layout)) {
-
-            coe = wfle.evaluate(layout);
+        if (wfle.checkConstraint(layout)) {
+            wfle.evaluate(layout);
+            coe = wfle.getEnergyCost();
             //System.out.println("layout valid");
-      //  } else {
-     //       coe = Double.MAX_VALUE;
-   //     }
+        } else {
+            coe = Double.MAX_VALUE;
+        }
 
         return coe;
     }

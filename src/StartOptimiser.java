@@ -6,7 +6,7 @@ public class StartOptimiser {
 		//mac
 		//WindScenario sc = new WindScenario("./Scenarios/practice_"+"4"+".xml");
 		//pc
-		WindScenario sc = new WindScenario("./Scenarios/practice_"+"0"+".xml");
+		WindScenario sc = new WindScenario("./Scenarios/practice_"+"4"+".xml");
 		eval.initialize(sc);
 		Solver algorithm = new Solver(eval);
 		algorithm.run_cw();
