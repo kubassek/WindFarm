@@ -83,7 +83,7 @@ public class Solver {
 
             //crossover
             boolean[][] children = new boolean[2][grid.size()];
-            children = this.onePoint(parents);
+            children = this.randomUniform(parents);
 
             //replacement
             boolean[] child1 = new boolean[grid.size()];
