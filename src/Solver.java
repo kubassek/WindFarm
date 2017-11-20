@@ -8,6 +8,7 @@ public class Solver {
     double[] fits;
     Random rand;
     int populationSize;
+    int mutationChance = 20;
 
     ArrayList<double[]> grid;
 
@@ -69,7 +70,7 @@ public class Solver {
 
         /**** PUT YOUR OPTIMISER CODE HERE ***********/
 
-        for (int i = 0; i < (10); i++) {
+        for (int i = 0; i < (10000); i++) {
             // add some code to evolve a solution
 
             //selection
@@ -96,34 +97,61 @@ public class Solver {
             double[] childFits = new double[2];
             double childFit = 0;
 
-            if(this.falseCheck(child1) == false || this.falseCheck(child2)) {
-                childFits[0] = this.evaluate_individual(child1);
-                childFits[1] = this.evaluate_individual(child2);
+            child1 = this.mutationGeneFlip(child1);
+            child2 = this.mutationGeneFlip(child2);
 
-                if (childFits[0] < childFits[1]) {
-                    child = child1;
-                    childFit = childFits[0];
-                } else if (childFits[1] < childFits[0]) {
-                    child = child2;
-                    childFit = childFits[1];
-                }
+            childFits[0] = this.evaluate_individual(child1);
+            childFits[1] = this.evaluate_individual(child2);
 
-                System.out.println(i + " " + childFit);
+            if (childFits[0] < childFits[1]) {
+                child = child1;
+                childFit = childFits[0];
+            } else if (childFits[1] < childFits[0]) {
+                child = child2;
+                childFit = childFits[1];
+            }
+
+            if(this.falseCheck(child)) {
 
                 if (fits[parent[0]] < fits[parent[1]]) {
-                    for (int j = 0; j < grid.size(); j++) {
-                        population[parent[1]][j] = child[j];
-                        fits[parent[1]] = childFit;
+                    if(fits[parent[1]]>childFit) {
+                        for (int j = 0; j < grid.size(); j++) {
+                            population[parent[1]][j] = child[j];
+                            fits[parent[1]] = childFit;
+                        }
+                        System.out.println(i + " " + childFit);
                     }
                 } else if (fits[parent[1]] < fits[parent[0]]) {
-                    for (int j = 0; j < grid.size(); j++) {
-                        population[parent[0]][j] = child[j];
-                        fits[parent[0]] = childFit;
+                    if(fits[parent[0]]>childFit) {
+                        for (int j = 0; j < grid.size(); j++) {
+                            population[parent[0]][j] = child[j];
+                            fits[parent[0]] = childFit;
+                        }
+                        System.out.println(i + " " + childFit);
                     }
                 }
             }
         }
         evaluate();
+    }
+
+    private boolean[] mutationGeneFlip(boolean[] child){
+        boolean[] mutatedChild = new boolean[grid.size()];
+
+        int randomChance = rand.nextInt(mutationChance);
+        int randomGene = rand.nextInt(grid.size());
+
+        mutatedChild = child;
+
+        if(randomChance == 1){
+            if(child[randomGene]==true){
+                mutatedChild[randomGene] = false;
+            }else{
+                mutatedChild[randomGene] = true;
+            }
+        }
+
+        return mutatedChild;
     }
 
     private int[] randomSelection() {
@@ -133,10 +161,10 @@ public class Solver {
         return parents;
     }
 
-    private boolean falseCheck(boolean[] child){
+    private boolean falseCheck(boolean[] child) {
         boolean check = false;
         for (int j = 0; j < grid.size(); j++) {
-            if(child[j] == true){
+            if (child[j] == true) {
                 check = true;
             }
         }
@@ -227,7 +255,7 @@ public class Solver {
             }
 
         }
-         System.out.println("min " + minfit);
+        System.out.println("min " + minfit);
     }
 
 
