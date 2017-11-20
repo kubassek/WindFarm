@@ -83,7 +83,7 @@ public class Solver {
 
             //crossover
             boolean[][] children = new boolean[2][grid.size()];
-            children = this.onePoint(parents);
+            children = this.uniformCrossover(parents);
 
             //replacement
             boolean[] child1 = new boolean[grid.size()];
@@ -112,7 +112,6 @@ public class Solver {
             }
 
             if(this.falseCheck(child)) {
-                /*
                 if (fits[parent[0]] < fits[parent[1]]) {
                     if(fits[parent[1]]>childFit) {
                         for (int j = 0; j < grid.size(); j++) {
@@ -130,8 +129,7 @@ public class Solver {
                         System.out.println(i + " " + childFit);
                     }
                 }
-                */
-
+                /*
                 if(this.falseCheck(child)) {
 
                     int worst = 0;
@@ -151,7 +149,7 @@ public class Solver {
 
                     }
                 }
-
+                */
             }
             i = wfle.getNumberOfEvaluation();
         }
@@ -205,6 +203,26 @@ public class Solver {
                 children[1][i] = parents[0][i];
             }
         }
+        return children;
+    }
+
+    private boolean[][] uniformCrossover(boolean[][] parents) {
+
+        boolean[][] children = new boolean[2][grid.size()];
+        boolean change = true;
+
+        for (int i = 0; i < grid.size(); i++) {
+            if (change == true) {
+                children[0][i] = parents[0][i];
+                children[1][i] = parents[1][i];
+                change = false;
+            } else {
+                children[0][i] = parents[1][i];
+                children[1][i] = parents[0][i];
+                change = true;
+            }
+        }
+
         return children;
     }
 
