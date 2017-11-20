@@ -18,7 +18,7 @@ public class Solver {
         grid = new ArrayList<double[]>();
 
         // set up any parameter here, e.g pop size, cross_rate etc.
-        populationSize = 50;  // change this to anything you want
+        populationSize = 200;  // change this to anything you want
     }
 
 
@@ -112,24 +112,24 @@ public class Solver {
                 childFit = childFits[1];
             }
 
+            //replace worst
             if(this.falseCheck(child)) {
 
-                if (fits[parent[0]] < fits[parent[1]]) {
-                    if(fits[parent[1]]>childFit) {
-                        for (int j = 0; j < grid.size(); j++) {
-                            population[parent[1]][j] = child[j];
-                            fits[parent[1]] = childFit;
-                        }
-                        System.out.println(i + " " + childFit);
+                int worst = 0;
+
+                for(int j=0; j<grid.size();j++){
+                    if (fits[j] > fits[worst]) {
+                        worst = j;
                     }
-                } else if (fits[parent[1]] < fits[parent[0]]) {
-                    if(fits[parent[0]]>childFit) {
-                        for (int j = 0; j < grid.size(); j++) {
-                            population[parent[0]][j] = child[j];
-                            fits[parent[0]] = childFit;
-                        }
-                        System.out.println(i + " " + childFit);
+                }
+
+                if(childFit<fits[worst]){
+                    for(int k =0; k<grid.size();k++){
+                        population[worst][k] = child[k];
                     }
+
+                fits[worst] = childFit;
+
                 }
             }
         }
