@@ -83,7 +83,8 @@ public class Solver {
 
             //crossover
             boolean[][] children = new boolean[2][grid.size()];
-            children = this.randomUniform(parents);
+            children = this.onePoint(parents);
+            //children = this.randomUniform(parents);
 
             //replacement
             boolean[] child1 = new boolean[grid.size()];
@@ -185,6 +186,24 @@ public class Solver {
         return children;
     }
 
+    private boolean[][] onePoint(boolean[][] parents) {
+        boolean[][] children = new boolean[2][grid.size()];
+
+        int randomSplit = 2 + rand.nextInt((grid.size()-1) - 2 + 1);
+
+        for (int i = 0; i < grid.size(); i++) {
+         if(i<randomSplit){
+             children[0][i] = parents[1][i];
+             children[1][i] = parents[0][i];
+         }else if(i>randomSplit){
+             children[0][i] = parents[0][i];
+             children[1][i] = parents[1][i];
+         }
+        }
+
+        return children;
+    }
+
     // evaluate a single chromosome
     private double evaluate_individual(boolean[] child) {
 
@@ -208,13 +227,13 @@ public class Solver {
         }
 
         double coe;
-        if (wfle.checkConstraint(layout)) {
-            wfle.evaluate(layout);
-            coe = wfle.getEnergyCost();
+        //if (wfle.checkConstraint(layout)) {
+
+            coe = wfle.evaluate(layout);
             //System.out.println("layout valid");
-        } else {
-            coe = Double.MAX_VALUE;
-        }
+      //  } else {
+     //       coe = Double.MAX_VALUE;
+   //     }
 
         return coe;
     }

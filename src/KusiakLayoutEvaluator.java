@@ -126,6 +126,7 @@ public class KusiakLayoutEvaluator extends WindFarmLayoutEvaluator {
 			return false;
 		    }
 		}
+
 		// checking the security constraints
 	        for (int j=0; j<layout.length; j++) {
 	            if (i!=j) {
