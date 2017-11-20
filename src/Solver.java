@@ -112,7 +112,7 @@ public class Solver {
             }
 
             if(this.falseCheck(child)) {
-
+                /*
                 if (fits[parent[0]] < fits[parent[1]]) {
                     if(fits[parent[1]]>childFit) {
                         for (int j = 0; j < grid.size(); j++) {
@@ -128,6 +128,27 @@ public class Solver {
                             fits[parent[0]] = childFit;
                         }
                         System.out.println(i + " " + childFit);
+                    }
+                }
+                */
+
+                if(this.falseCheck(child)) {
+
+                    int worst = 0;
+
+                    for (int j = 0; j < grid.size(); j++) {
+                        if (fits[j] > fits[worst]) {
+                            worst = j;
+                        }
+                    }
+
+                    if (childFit < fits[worst]) {
+                        for (int k = 0; k < grid.size(); k++) {
+                            population[worst][k] = child[k];
+                        }
+
+                        fits[worst] = childFit;
+
                     }
                 }
 
