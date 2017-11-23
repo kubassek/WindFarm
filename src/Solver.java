@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,16 +13,18 @@ public class Solver {
     int mutationChance = 20;
     int runNumber;
     int scenario;
+    FileWriter writer;
 
     ArrayList<double[]> grid;
     ArrayList<String> output = new ArrayList<String>();
 
-    public Solver(WindFarmLayoutEvaluator evaluator, int runNumber, int scenario) {
+    public Solver(WindFarmLayoutEvaluator evaluator, int runNumber, int scenario, FileWriter writer) {
         wfle = evaluator;
         rand = new Random();
         grid = new ArrayList<double[]>();
         this.runNumber = runNumber;
         this.scenario = scenario;
+        this.writer = writer;
 
         // set up any parameter here, e.g pop size, cross_rate etc.
         populationSize = 200;  // change this to anything you want
@@ -31,7 +35,7 @@ public class Solver {
         return output;
     }
 
-    public void run_cw() {
+    public void run_cw() throws IOException {
 
 
         /************set up grid for scenario chosen  ***************************/
@@ -72,8 +76,8 @@ public class Solver {
             }
         }
 
-        output.add("========================================================\n");
-        output.add("current run number: " + runNumber + " on scenario: " + scenario + "\n");
+        writer.write("========================================================\n");
+        writer.write("current run number: " + runNumber + " on scenario: " + scenario + "\n");
         System.out.println("========================================================");
         System.out.println("current run number: " + runNumber + " on scenario: " + scenario);
 
@@ -84,7 +88,7 @@ public class Solver {
 
         /**** PUT YOUR OPTIMISER CODE HERE ***********/
         int i = 0;
-        while(i<3) {
+        while(i<10000) {
             // add some code to evolve a solution
 
             //selection
@@ -134,7 +138,7 @@ public class Solver {
                             fits[parent[1]] = childFit;
                         }
                         System.out.println(i + " " + childFit);
-                        output.add(String.valueOf(childFit) + "\n");
+                        writer.write(String.valueOf(childFit) + "\n");
                     }
                 } else if (fits[parent[1]] < fits[parent[0]]) {
                     if(fits[parent[0]]>childFit) {
@@ -143,7 +147,7 @@ public class Solver {
                             fits[parent[0]] = childFit;
                         }
                         System.out.println(i + " " + childFit);
-                        output.add(String.valueOf(childFit) + "\n");
+                        writer.write(String.valueOf(childFit) + "\n");
                     }
                 }
             }
@@ -237,7 +241,7 @@ public class Solver {
     }
 
     // evaluates the whole population
-    private void evaluate() {
+    private void evaluate() throws IOException {
         double minfit = Double.MAX_VALUE;
         for (int p = 0; p < populationSize; p++) {
             int nturbines = 0;
@@ -272,7 +276,8 @@ public class Solver {
 
         }
         System.out.println("min " + minfit);
-        output.add("min " + minfit + "\n");
+        writer.write("min " + minfit + "\n");
+        wfle.resetEvals();
     }
 
     public ArrayList<double[]> getGrid() {

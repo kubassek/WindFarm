@@ -104,4 +104,8 @@ public abstract class WindFarmLayoutEvaluator {
      * @return an array of [xmin, ymin, xmax, ymax] for each obstacle.
      */
     public abstract double[][] getObstacles();
+
+	public void resetEvals() {
+		WindFarmLayoutEvaluator.nEvals = nEvals;
+	}
 }

@@ -156,5 +156,4 @@ public class WindScenario {
 			return Math.pow(a,b);
 		}
 	}
-
 }
