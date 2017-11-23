@@ -9,18 +9,27 @@ public class Solver {
     Random rand;
     int populationSize;
     int mutationChance = 20;
+    int runNumber;
+    int scenario;
 
     ArrayList<double[]> grid;
+    ArrayList<String> output = new ArrayList<String>();
 
-    public Solver(WindFarmLayoutEvaluator evaluator) {
+    public Solver(WindFarmLayoutEvaluator evaluator, int runNumber, int scenario) {
         wfle = evaluator;
         rand = new Random();
         grid = new ArrayList<double[]>();
+        this.runNumber = runNumber;
+        this.scenario = scenario;
 
         // set up any parameter here, e.g pop size, cross_rate etc.
         populationSize = 200;  // change this to anything you want
     }
 
+
+    public ArrayList<String> getOutput() {
+        return output;
+    }
 
     public void run_cw() {
 
@@ -63,6 +72,11 @@ public class Solver {
             }
         }
 
+        output.add("========================================================\n");
+        output.add("current run number: " + runNumber + " on scenario: " + scenario + "\n");
+        System.out.println("========================================================");
+        System.out.println("current run number: " + runNumber + " on scenario: " + scenario);
+
         /****** evaluate initial population  *************************/
 
         // this populates the fit[] array with the fitness values for each solution
@@ -70,7 +84,7 @@ public class Solver {
 
         /**** PUT YOUR OPTIMISER CODE HERE ***********/
         int i = 0;
-        while(i<10000) {
+        while(i<3) {
             // add some code to evolve a solution
 
             //selection
@@ -120,6 +134,7 @@ public class Solver {
                             fits[parent[1]] = childFit;
                         }
                         System.out.println(i + " " + childFit);
+                        output.add(String.valueOf(childFit) + "\n");
                     }
                 } else if (fits[parent[1]] < fits[parent[0]]) {
                     if(fits[parent[0]]>childFit) {
@@ -128,9 +143,9 @@ public class Solver {
                             fits[parent[0]] = childFit;
                         }
                         System.out.println(i + " " + childFit);
+                        output.add(String.valueOf(childFit) + "\n");
                     }
                 }
-
             }
             i = wfle.getNumberOfEvaluation();
         }
@@ -223,7 +238,6 @@ public class Solver {
 
     // evaluates the whole population
     private void evaluate() {
-        System.out.println("starting");
         double minfit = Double.MAX_VALUE;
         for (int p = 0; p < populationSize; p++) {
             int nturbines = 0;
@@ -258,7 +272,13 @@ public class Solver {
 
         }
         System.out.println("min " + minfit);
+        output.add("min " + minfit + "\n");
     }
+
+    public ArrayList<double[]> getGrid() {
+        return grid;
+    }
+
 
 
 }
